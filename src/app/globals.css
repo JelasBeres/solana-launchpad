@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #090a0f;
+  --foreground: #f4f4f5;
+}
+
+body {
+  color: var(--foreground);
+  background-color: #090a0f;
+  /* Clean modern flat dark surface with subtle ambient yellow glow */
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(234, 179, 8, 0.08), transparent 70%),
+    radial-gradient(circle at 90% 80%, rgba(202, 138, 4, 0.04), transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Custom Flat Yellow Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090a0f;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ca8a04;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* =========================================================================
+     FLAT UI YELLOW DESIGN SYSTEM
+     ========================================================================= */
+
+  /* Flat Cards */
+  .sketch-card,
+  .clay-card,
+  .flat-card {
+    background-color: #121318;
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+    transition: all 0.15s ease-in-out;
+  }
+  .sketch-card:hover,
+  .clay-card:hover,
+  .flat-card:hover {
+    border-color: rgba(234, 179, 8, 0.45);
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  /* Flat Secondary Surface */
+  .sketch-surface,
+  .clay-surface,
+  .flat-surface {
+    background-color: #161820;
+    border: 1px solid #27272a;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  /* Flat Input / Inset Box */
+  .sketch-inset,
+  .clay-inset,
+  .flat-inset {
+    background-color: #0c0d12;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .sketch-inset:focus-within,
+  .clay-inset:focus-within,
+  .flat-inset:focus-within {
+    border-color: #facc15;
+    box-shadow: 0 0 0 1px #facc15;
+  }
+
+  /* Flat Yellow Primary Button */
+  .sketch-btn-primary,
+  .clay-btn-primary,
+  .flat-btn-primary {
+    background-color: #facc15;
+    color: #000000 !important;
+    border: 1px solid #eab308;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    transition: all 0.12s ease-in-out;
+    cursor: pointer;
+  }
+  .sketch-btn-primary:hover,
+  .clay-btn-primary:hover,
+  .flat-btn-primary:hover {
+    background-color: #fde047;
+    border-color: #facc15;
+    box-shadow: 0 2px 6px 0 rgba(234, 179, 8, 0.3);
+  }
+  .sketch-btn-primary:active,
+  .clay-btn-primary:active,
+  .flat-btn-primary:active {
+    background-color: #eab308;
+    transform: translateY(1px);
+  }
+
+  /* Flat Secondary Button */
+  .sketch-btn-secondary,
+  .clay-btn-secondary,
+  .flat-btn-secondary {
+    background-color: #161820;
+    color: #facc15;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.12s ease-in-out;
+    cursor: pointer;
+  }
+  .sketch-btn-secondary:hover,
+  .clay-btn-secondary:hover,
+  .flat-btn-secondary:hover {
+    background-color: #22242e;
+    border-color: #facc15;
+    color: #ffffff;
+  }
+  .sketch-btn-secondary:active,
+  .clay-btn-secondary:active,
+  .flat-btn-secondary:active {
+    background-color: #121318;
+    transform: translateY(1px);
+  }
+
+  /* Flat Accent Highlight Button */
+  .sketch-btn-mint {
+    background-color: #fef08a;
+    color: #000000 !important;
+    border: 1px solid #facc15;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.12s ease-in-out;
+  }
+  .sketch-btn-mint:hover {
+    background-color: #facc15;
+  }
+
+  /* Flat Yellow Badge */
+  .sketch-badge,
+  .clay-badge,
+  .flat-badge {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: #facc15;
+    border: 1px solid rgba(234, 179, 8, 0.25);
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 600;
+  }
+
+  /* Remove tape overlays completely */
+  .sketch-tape {
+    display: none !important;
+  }
+  .sketch-tape::before {
+    display: none !important;
+  }
+
+  /* Flat Progress Bar */
+  .sketch-progress-bar {
+    background-color: #facc15;
+  }
+
+  /* Clean yellow underline */
+  .sketch-squiggly {
+    text-decoration: underline #facc15 2px;
+    text-underline-offset: 4px;
+  }
+}

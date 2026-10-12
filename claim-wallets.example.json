@@ -1,0 +1,17 @@
+{
+  "solana": {
+    "destination": "YOUR_MAIN_SOLANA_ADDRESS",
+    "payerKey": "OPTIONAL: private key of the main wallet so it pays all network fees (remove this line to let each creator wallet pay)",
+    "creatorKeys": [
+      "PHANTOM_PRIVATE_KEY_OF_CREATOR_WALLET_1",
+      "PHANTOM_PRIVATE_KEY_OF_CREATOR_WALLET_2"
+    ]
+  },
+  "robinhood": {
+    "destination": "0xYOUR_MAIN_EVM_ADDRESS",
+    "creatorKeys": [
+      "0xMETAMASK_PRIVATE_KEY_OF_CREATOR_WALLET_1",
+      "0xMETAMASK_PRIVATE_KEY_OF_CREATOR_WALLET_2"
+    ]
+  }
+}
