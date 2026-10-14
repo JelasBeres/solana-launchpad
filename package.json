@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "claim-fees": "tsx scripts/claim-all.ts"
+    "claim-fees": "tsx scripts/claim-all.ts",
+    "sniper": "tsx scripts/pons-sniper.ts",
+    "sniper-ui": "tsx scripts/sniper-ui.ts"
   },
   "dependencies": {
     "@pump-fun/pump-sdk": "^4.0.0",

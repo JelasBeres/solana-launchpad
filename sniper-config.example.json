@@ -1,0 +1,18 @@
+{
+  "privateKey": "0xPRIVATE_KEY_OF_A_DEDICATED_SNIPER_WALLET",
+  "buyEth": "0.005",
+  "slippagePercent": 15,
+  "maxCreatorTaxPercent": 3,
+  "maxSnipeTaxPercent": 1,
+  "maxLaunchAgeSeconds": 10,
+  "maxOpenPositions": 3,
+  "maxTotalSpendEth": "0.05",
+  "gasReserveEth": "0.002",
+  "takeProfitPercent": 50,
+  "stopLossPercent": 30,
+  "maxHoldSeconds": 600,
+  "keywords": [],
+  "blockedKeywords": ["test"],
+  "allowedDeployers": [],
+  "blockedDeployers": []
+}

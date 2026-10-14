@@ -43,3 +43,8 @@ next-env.d.ts
 claim-wallets.json
 claim-wallets*.json
 !claim-wallets.example.json
+
+# sniper wallet key + open positions for scripts/pons-sniper.ts
+sniper-config.json
+sniper-positions.json
+sniper-history.json

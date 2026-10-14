@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useBalance } from "wagmi";
-import { formatUnits, parseUnits, parseEventLogs, toHex } from "viem";
+import { formatUnits, getAddress, isAddress, parseUnits, parseEventLogs, toHex } from "viem";
 import { Rocket, Info, AlertCircle, CheckCircle2, Sparkles, UploadCloud, X, Loader2, Coins, Globe, MessageSquare, Send } from "lucide-react";
 import { CONTRACT_ADDRESSES } from "@/config/chain";
 import { PONS_FACTORY_ABI, PONS_ROUTER_ABI } from "@/config/abis";
@@ -30,6 +30,9 @@ export default function PonsCreateForm() {
   // Optional Initial Dev Buy (in ETH)
   const [devBuyAmount, setDevBuyAmount] = useState<string>("");
   const [devBuyHint, setDevBuyHint] = useState<string | null>(null);
+
+  // Optional wallets that skip Pons' anti-snipe tax on this launch (e.g. your own sniper wallet)
+  const [snipeExemptInput, setSnipeExemptInput] = useState("");
 
   // Pinata Image Upload States
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -277,6 +280,10 @@ export default function PonsCreateForm() {
     ? parseUnits(devBuyAmount, 18)
     : 0n;
 
+  const snipeExemptEntries = snipeExemptInput.split(/[\s,]+/).filter(Boolean);
+  const invalidSnipeExempt = snipeExemptEntries.find((a) => !isAddress(a));
+  const snipeExemptions = invalidSnipeExempt ? [] : [...new Set(snipeExemptEntries.map((a) => getAddress(a)))];
+
   const currentLaunchFee = launchFee ?? parseUnits("0.0005", 18);
   const totalRequiredEth = currentLaunchFee + parsedDevBuy;
 
@@ -290,6 +297,19 @@ export default function PonsCreateForm() {
     if (!name || !symbol) return;
     if (!address) {
       setErrorMessage("Please connect your Web3 wallet first.");
+      return;
+    }
+    // The logo URL is written on-chain for good, so never launch with one other sites cannot load
+    if (isUploadingImage) {
+      setErrorMessage("The logo is still uploading. Wait until it finishes.");
+      return;
+    }
+    if (imageUrl.startsWith("/")) {
+      setErrorMessage("The logo was not uploaded to Catbox (it is only stored on this server). Remove it and upload again before launching.");
+      return;
+    }
+    if (invalidSnipeExempt) {
+      setErrorMessage(`Snipe tax exempt wallet "${invalidSnipeExempt}" is not a valid 0x address.`);
       return;
     }
 
@@ -328,7 +348,7 @@ export default function PonsCreateForm() {
             parsedDevBuy,
             0n, // minTokensOut
             address, // recipient
-            [], // extra snipe exemptions
+            snipeExemptions, // extra snipe exemptions
           ],
           value: totalRequiredEth,
         });
@@ -337,11 +357,10 @@ export default function PonsCreateForm() {
           address: CONTRACT_ADDRESSES.factory,
           abi: PONS_FACTORY_ABI,
           functionName: "launchToken",
-          args: [
-            tokenParams,
-            0n,
-            "0x0000000000000000000000000000000000000000",
-          ],
+          args:
+            snipeExemptions.length > 0
+              ? [tokenParams, 0n, "0x0000000000000000000000000000000000000000", snipeExemptions]
+              : [tokenParams, 0n, "0x0000000000000000000000000000000000000000"],
           value: currentLaunchFee,
         });
       }
@@ -493,6 +512,11 @@ export default function PonsCreateForm() {
                       <p className="text-xs font-hand text-sky-300 flex items-center space-x-1">
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
                         <span>Uploading image...</span>
+                      </p>
+                    ) : imageUrl.startsWith("/") ? (
+                      <p className="text-[11px] font-hand text-amber-300 leading-snug">
+                        Catbox upload failed, so this logo is only stored on this server and will not show on
+                        other sites (Pons, GMGN). Remove it and upload again before launching.
                       </p>
                     ) : imageUrl ? (
                       <p className="text-[11px] font-mono text-emerald-400 truncate">
@@ -664,6 +688,31 @@ export default function PonsCreateForm() {
                   <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                   <span>{devBuyHint}</span>
                 </p>
+              )}
+            </div>
+
+            {/* Optional snipe tax exemptions */}
+            <div className="pt-4 border-t border-zinc-800 space-y-2">
+              <label className="text-base font-hand font-bold text-slate-200 block">
+                Snipe Tax Exempt Wallets (Optional)
+              </label>
+              <p className="text-xs font-hand text-slate-400 leading-relaxed">
+                Pons taxes buys in the first seconds after launch (up to 99%). Wallets listed here pay 0% snipe tax
+                on this token. Separate several addresses with commas.
+              </p>
+              <textarea
+                rows={2}
+                placeholder="0x..., 0x..."
+                value={snipeExemptInput}
+                onChange={(e) => setSnipeExemptInput(e.target.value)}
+                className="w-full px-4 py-2.5 sketch-inset text-xs text-white font-mono placeholder:text-slate-500 focus:outline-none"
+              />
+              {invalidSnipeExempt ? (
+                <p className="text-xs font-hand text-rose-400">&quot;{invalidSnipeExempt}&quot; is not a valid 0x address.</p>
+              ) : (
+                snipeExemptions.length > 0 && (
+                  <p className="text-xs font-hand text-emerald-400">{snipeExemptions.length} wallet(s) will be snipe tax exempt.</p>
+                )
               )}
             </div>
 
